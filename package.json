@@ -1,0 +1,16 @@
+{
+  "name": "bus-pass-system",
+  "version": "1.0.0",
+  "description": "Cloud Bus Pass System for CodeAlpha Internship",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'No build step needed for static site'",
+    "start": "npx serve public -s"
+  },
+  "dependencies": {
+    "serve": "^14.0.0"
+  },
+  "keywords": ["bus", "booking", "cloud", "supabase", "render"],
+  "author": "Vishnuputhran R",
+  "license": "MIT"
+}
