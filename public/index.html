@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudBus Pro - Premium Bus Pass System</title>
+    <title>CloudBus Pro - Bus Management System</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -44,30 +44,16 @@
             padding: 20px;
         }
 
-        /* Page Styles */
-        .page {
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Header Styles */
+        /* Header */
         .header {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             padding: 2rem;
             text-align: center;
+            border-radius: var(--radius) var(--radius) 0 0;
+            margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
-            border-radius: var(--radius) var(--radius) 0 0;
         }
 
         .header::before {
@@ -78,7 +64,6 @@
             right: 0;
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
-            background-size: cover;
         }
 
         .header-content {
@@ -95,29 +80,15 @@
             font-size: 2.8rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
-            font-weight: 300;
         }
 
-        .cloud-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,0.2);
-            padding: 8px 16px;
-            border-radius: 50px;
-            margin-top: 1rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        /* Card Styles */
-        .card {
+        /* Main Content */
+        .main-content {
             background: white;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
@@ -125,14 +96,75 @@
             margin-bottom: 2rem;
         }
 
-        .auth-card {
-            max-width: 450px;
-            margin: 2rem auto;
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: var(--light);
+            border-bottom: 2px solid var(--gray-light);
         }
 
-        /* Form Styles */
-        .form-container {
+        .nav-tab {
+            padding: 1.2rem 2rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
             padding: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Forms */
+        .form-section {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-light);
+        }
+
+        .form-section h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
 
         .form-group {
@@ -144,12 +176,9 @@
             margin-bottom: 0.5rem;
             font-weight: 600;
             color: var(--dark);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 12px 16px;
             border: 2px solid var(--gray-light);
@@ -157,15 +186,16 @@
             font-size: 16px;
             transition: var(--transition);
             background: white;
+            font-family: inherit;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* Button Styles */
+        /* Buttons */
         .btn {
             background: var(--primary);
             color: white;
@@ -179,15 +209,11 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            text-decoration: none;
-            width: 100%;
-            justify-content: center;
         }
 
         .btn:hover {
             background: var(--primary-dark);
             transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
         }
 
         .btn-secondary {
@@ -196,252 +222,105 @@
 
         .btn-secondary:hover {
             background: #0da271;
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
+        .btn-danger {
+            background: var(--error);
         }
 
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
+        .btn-danger:hover {
+            background: #dc2626;
         }
 
-        .button-group {
+        .action-buttons {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
+            margin: 1.5rem 0;
         }
 
-        /* Navigation */
-        .nav-links {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            transition: var(--transition);
-            background: rgba(255,255,255,0.1);
-        }
-
-        .nav-link:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-        }
-
-        /* Demo Credentials */
-        .demo-credentials {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            border-radius: 8px;
-            padding: 1rem;
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
             margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-
-        .demo-credentials h4 {
-            color: #92400e;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .credential-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.25rem;
-            padding: 0.25rem 0;
-        }
-
-        .credential-item:not(:last-child) {
-            border-bottom: 1px dashed #f59e0b;
-        }
-
-        /* Search Form */
-        .search-form {
-            background: var(--light);
-            padding: 2rem;
+            background: white;
             border-radius: var(--radius);
-            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .search-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 1rem;
-            align-items: end;
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-light);
         }
 
-        /* Routes Grid */
-        .routes-grid {
+        .data-table th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Cards */
+        .cards-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin: 2rem 0;
         }
 
-        .route-card {
+        .card {
             background: white;
             border: 1px solid var(--gray-light);
             border-radius: var(--radius);
             padding: 1.5rem;
-            cursor: pointer;
             transition: var(--transition);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .route-card:hover {
-            border-color: var(--primary);
+        .card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow);
         }
 
-        .route-card.selected {
-            border-color: var(--success);
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-        }
-
-        .route-info {
-            flex: 1;
-        }
-
-        .route-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .route-name {
-            font-size: 1.2rem;
-            font-weight: 700;
+        .card h3 {
             color: var(--primary);
-        }
-
-        .route-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--success);
-        }
-
-        .route-details {
-            display: grid;
-            grid-template-columns: auto auto auto;
-            gap: 1rem;
-            color: var(--gray);
-        }
-
-        .detail-item {
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
         }
 
-        /* Booking Form */
-        .booking-form {
-            background: var(--light);
-            padding: 2rem;
-            border-radius: var(--radius);
-            margin-bottom: 2rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
-        }
-
-        /* Ticket Styles */
-        .ticket {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            padding: 2rem;
-            border-radius: var(--radius);
-            border: 2px dashed #333;
-            margin-top: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ticket::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.3)"/></svg>');
-        }
-
-        .ticket-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .ticket-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px dashed #333;
-            padding-bottom: 1rem;
-        }
-
-        .ticket-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .ticket-item {
-            margin-bottom: 0.5rem;
-        }
-
-        .ticket-item strong {
-            color: var(--dark);
-        }
-
-        /* Status Messages */
+        /* Messages */
         .message {
             padding: 1rem;
             border-radius: 8px;
             margin: 1rem 0;
             display: none;
+            border-left: 4px solid;
         }
 
         .message.success {
             background: #d1fae5;
             color: #065f46;
-            border: 1px solid #a7f3d0;
+            border-left-color: #10b981;
         }
 
         .message.error {
             background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+            color: #721c24;
+            border-left-color: #ef4444;
         }
 
         .message.info {
             background: #dbeafe;
             color: #1e40af;
-            border: 1px solid #bfdbfe;
-        }
-
-        .message.warning {
-            background: #fef3c7;
-            color: #92400e;
-            border: 1px solid #fde68a;
+            border-left-color: #3b82f6;
         }
 
         /* Loading */
@@ -466,343 +345,366 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+        /* Status */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-2 {
             margin-top: 2rem;
         }
 
-        .feature-card {
-            background: var(--light);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            text-align: center;
-            transition: var(--transition);
+        .mb-2 {
+            margin-bottom: 2rem;
         }
 
-        .feature-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        /* Homepage Styles */
-        .hero {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .hero-btn {
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            width: auto;
-        }
-
-        /* Quick Login Buttons */
-        .quick-login {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .quick-btn {
-            flex: 1;
-            padding: 8px 12px;
-            font-size: 0.8rem;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .quick-btn:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .search-grid {
-                grid-template-columns: 1fr;
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                padding: 1rem;
+                justify-content: center;
             }
 
             .form-grid {
                 grid-template-columns: 1fr;
             }
 
-            .route-details {
+            .cards-grid {
                 grid-template-columns: 1fr;
             }
 
-            .ticket-details {
-                grid-template-columns: 1fr;
+            .data-table {
+                font-size: 0.875rem;
             }
 
-            .button-group {
-                flex-direction: column;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .quick-login {
-                flex-direction: column;
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
             }
         }
-
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .text-success { color: var(--success); }
-        .text-warning { color: var(--warning); }
-        .text-error { color: var(--error); }
-        .mb-1 { margin-bottom: 1rem; }
-        .mb-2 { margin-bottom: 2rem; }
-        .mt-1 { margin-top: 1rem; }
-        .mt-2 { margin-top: 2rem; }
-        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <!-- Home Page -->
-    <div id="home-page" class="page active">
-        <div class="container">
-            <div class="hero">
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-bus"></i>
                 </div>
                 <h1>CloudBus Pro</h1>
-                <p class="subtitle">Premium Cloud-Based Bus Pass System</p>
-                <div class="cloud-badge">
-                    <i class="fas fa-cloud"></i>
-                    Powered by Supabase & Render
-                </div>
-                
-                <div class="hero-buttons">
-                    <button class="btn hero-btn" onclick="showPage('register-page')">
-                        <i class="fas fa-user-plus"></i> Create Account
-                    </button>
-                    <button class="btn btn-secondary hero-btn" onclick="showPage('login-page')">
-                        <i class="fas fa-sign-in-alt"></i> Sign In
-                    </button>
-                </div>
-
-                <!-- Demo Notice -->
-                <div class="demo-credentials" style="max-width: 500px; margin: 2rem auto;">
-                    <h4><i class="fas fa-key"></i> Demo Login Credentials</h4>
-                    <p style="margin-bottom: 0.5rem; color: #92400e;">Use these credentials for quick testing:</p>
-                    <div class="credential-item">
-                        <strong>Email:</strong> <span>demo@cloudbus.com</span>
-                    </div>
-                    <div class="credential-item">
-                        <strong>Password:</strong> <span>demopass123</span>
-                    </div>
-                    <div class="credential-item">
-                        <strong>Or click:</strong> 
-                        <button class="quick-btn" onclick="quickLogin('demo@cloudbus.com', 'demopass123')">
-                            Quick Login
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Secure & Reliable</h3>
-                    <p>Bank-level security with cloud infrastructure</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Instant Booking</h3>
-                    <p>Real-time booking confirmation</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Mobile Friendly</h3>
-                    <p>Works perfectly on all devices</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-cloud"></i>
-                    </div>
-                    <h3>Cloud Powered</h3>
-                    <p>Scalable cloud architecture</p>
-                </div>
+                <p class="subtitle">Complete Bus Management System</p>
             </div>
         </div>
-    </div>
 
-    <!-- Register Page -->
-    <div id="register-page" class="page">
-        <div class="container">
-            <div class="card auth-card">
-                <div class="header">
-                    <div class="header-content">
-                        <div class="logo">
-                            <i class="fas fa-user-plus"></i>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Navigation -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('usersTab')">
+                    <i class="fas fa-users"></i> Users
+                </button>
+                <button class="nav-tab" onclick="showTab('routesTab')">
+                    <i class="fas fa-route"></i> Bus Routes
+                </button>
+                <button class="nav-tab" onclick="showTab('bookingsTab')">
+                    <i class="fas fa-ticket-alt"></i> Bookings
+                </button>
+                <button class="nav-tab" onclick="showTab('analyticsTab')">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </button>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="usersTab" class="tab-content active">
+                <div class="form-section">
+                    <h2><i class="fas fa-user-plus"></i> Add New User</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="userEmail">Email</label>
+                            <input type="email" id="userEmail" placeholder="Enter email address">
                         </div>
-                        <h1>Create Account</h1>
-                        <p class="subtitle">Join CloudBus Pro today</p>
+                        <div class="form-group">
+                            <label for="userPassword">Password</label>
+                            <input type="password" id="userPassword" placeholder="Enter password">
+                        </div>
+                        <div class="form-group">
+                            <label for="userFullName">Full Name</label>
+                            <input type="text" id="userFullName" placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="userPhone">Phone</label>
+                            <input type="tel" id="userPhone" placeholder="Enter phone number">
+                        </div>
                     </div>
-                </div>
-                <div class="form-container">
-                    <div class="demo-credentials">
-                        <h4><i class="fas fa-info-circle"></i> Demo Available</h4>
-                        <p>Already have demo credentials? <a href="javascript:void(0)" onclick="showPage('login-page')" style="color: #1e40af; text-decoration: underline;">Sign in here</a></p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="regName">Full Name</label>
-                        <input type="text" id="regName" placeholder="Enter your full name">
-                    </div>
-                    <div class="form-group">
-                        <label for="regEmail">Email Address</label>
-                        <input type="email" id="regEmail" placeholder="Enter your email">
-                    </div>
-                    <div class="form-group">
-                        <label for="regPhone">Phone Number</label>
-                        <input type="tel" id="regPhone" placeholder="Enter your phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="regPassword">Password</label>
-                        <input type="password" id="regPassword" placeholder="Create secure password">
-                    </div>
-                    <button class="btn" onclick="register()">
-                        <i class="fas fa-user-plus"></i> Create Account
+                    <button onclick="addUser()" class="btn">
+                        <i class="fas fa-save"></i> Add User
                     </button>
-                    <div class="nav-links">
-                        <a href="javascript:void(0)" onclick="showPage('home-page')" class="nav-link">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                        <a href="javascript:void(0)" onclick="showPage('login-page')" class="nav-link">
-                            <i class="fas fa-sign-in-alt"></i> Sign In
-                        </a>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-users"></i> All Users</h2>
+                    <button onclick="loadUsers()" class="btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh Users
+                    </button>
+                    <div class="data-table-container">
+                        <table class="data-table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Full Name</th>
+                                    <th>Phone</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Users will be loaded here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Login Page -->
-    <div id="login-page" class="page">
-        <div class="container">
-            <div class="card auth-card">
-                <div class="header">
-                    <div class="header-content">
-                        <div class="logo">
-                            <i class="fas fa-sign-in-alt"></i>
+            <!-- Bus Routes Tab -->
+            <div id="routesTab" class="tab-content">
+                <div class="form-section">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Bus Route</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="routeName">Route Name</label>
+                            <input type="text" id="routeName" placeholder="e.g., Express 101">
                         </div>
-                        <h1>Welcome Back</h1>
-                        <p class="subtitle">Sign in to your account</p>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <!-- Demo Credentials -->
-                    <div class="demo-credentials">
-                        <h4><i class="fas fa-key"></i> Demo Credentials</h4>
-                        <div class="credential-item">
-                            <strong>Email:</strong> <span>demo@cloudbus.com</span>
+                        <div class="form-group">
+                            <label for="fromCity">From City</label>
+                            <input type="text" id="fromCity" placeholder="Departure city">
                         </div>
-                        <div class="credential-item">
-                            <strong>Password:</strong> <span>demopass123</span>
+                        <div class="form-group">
+                            <label for="toCity">To City</label>
+                            <input type="text" id="toCity" placeholder="Destination city">
                         </div>
-                        <div class="quick-login">
-                            <button class="quick-btn" onclick="quickLogin('demo@cloudbus.com', 'demopass123')">
-                                <i class="fas fa-bolt"></i> Quick Login as Demo User
-                            </button>
-                            <button class="quick-btn" onclick="quickLogin('admin@cloudbus.com', 'admin123')">
-                                <i class="fas fa-user-shield"></i> Quick Login as Admin
-                            </button>
-                            <button class="quick-btn" onclick="quickLogin('test@user.com', 'testpass123')">
-                                <i class="fas fa-user"></i> Quick Login as Test User
-                            </button>
+                        <div class="form-group">
+                            <label for="departureTime">Departure Time</label>
+                            <input type="time" id="departureTime">
+                        </div>
+                        <div class="form-group">
+                            <label for="arrivalTime">Arrival Time</label>
+                            <input type="time" id="arrivalTime">
+                        </div>
+                        <div class="form-group">
+                            <label for="routePrice">Price ($)</label>
+                            <input type="number" id="routePrice" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="seatsAvailable">Seats Available</label>
+                            <input type="number" id="seatsAvailable" placeholder="40" value="40">
+                        </div>
+                        <div class="form-group">
+                            <label for="isActive">Status</label>
+                            <select id="isActive">
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="loginEmail">Email Address</label>
-                        <input type="email" id="loginEmail" placeholder="Enter your email" value="demo@cloudbus.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" placeholder="Enter your password" value="demopass123">
-                    </div>
-                    <button class="btn btn-secondary" onclick="login()">
-                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    <button onclick="addBusRoute()" class="btn">
+                        <i class="fas fa-save"></i> Add Route
                     </button>
-                    <div class="nav-links">
-                        <a href="javascript:void(0)" onclick="showPage('home-page')" class="nav-link">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                        <a href="javascript:void(0)" onclick="showPage('register-page')" class="nav-link">
-                            <i class="fas fa-user-plus"></i> Create Account
-                        </a>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-route"></i> All Bus Routes</h2>
+                    <button onclick="loadBusRoutes()" class="btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh Routes
+                    </button>
+                    <div class="data-table-container">
+                        <table class="data-table" id="routesTable">
+                            <thead>
+                                <tr>
+                                    <th>Route Name</th>
+                                    <th>From → To</th>
+                                    <th>Schedule</th>
+                                    <th>Price</th>
+                                    <th>Seats</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="routesTableBody">
+                                <!-- Routes will be loaded here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Dashboard Page -->
-    <div id="dashboard-page" class="page">
-        <div class="container">
-            <div class="card">
-                <div class="header">
-                    <div class="header-content">
-                        <div class="logo">
-                            <i class="fas fa-tachometer-alt"></i>
+            <!-- Bookings Tab -->
+            <div id="bookingsTab" class="tab-content">
+                <div class="form-section">
+                    <h2><i class="fas fa-ticket-alt"></i> Create New Booking</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="bookingUserId">User</label>
+                            <select id="bookingUserId">
+                                <option value="">Select user</option>
+                            </select>
                         </div>
-                        <h1>Booking Dashboard</h1>
-                        <p class="subtitle">Welcome, <span id="userName">User</span>!</p>
-                        <div class="nav-links">
-                            <a href="javascript:void(0)" onclick="showPage('home-page')" class="nav-link">
-                                <i class="fas fa-home"></i> Home
-                            </a>
-                            <a href="javascript:void(0)" onclick="logout()" class="nav-link">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a>
+                        <div class="form-group">
+                            <label for="bookingRouteId">Bus Route</label>
+                            <select id="bookingRouteId">
+                                <option value="">Select route</option>
+                            </select>
                         </div>
+                        <div class="form-group">
+                            <label for="passengerName">Passenger Name</label>
+                            <input type="text" id="passengerName" placeholder="Passenger full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="passengerAge">Passenger Age</label>
+                            <input type="number" id="passengerAge" placeholder="Age" min="1" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="passengerGender">Passenger Gender</label>
+                            <select id="passengerGender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="seatNumber">Seat Number</label>
+                            <input type="number" id="seatNumber" placeholder="Optional">
+                        </div>
+                        <div class="form-group">
+                            <label for="totalPrice">Total Price ($)</label>
+                            <input type="number" id="totalPrice" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookingStatus">Status</label>
+                            <select id="bookingStatus">
+                                <option value="confirmed">Confirmed</option>
+                                <option value="pending">Pending</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="createBooking()" class="btn">
+                        <i class="fas fa-save"></i> Create Booking
+                    </button>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-list"></i> All Bookings</h2>
+                    <button onclick="loadBookings()" class="btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh Bookings
+                    </button>
+                    <div class="data-table-container">
+                        <table class="data-table" id="bookingsTable">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Passenger</th>
+                                    <th>Route</th>
+                                    <th>Age/Gender</th>
+                                    <th>Seat</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Booked On</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                <!-- Bookings will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analyticsTab" class="tab-content">
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3><i class="fas fa-users"></i> Total Users</h3>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);" id="totalUsers">0</div>
+                        <p>Registered users in the system</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fas fa-route"></i> Active Routes</h3>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--secondary);" id="activeRoutes">0</div>
+                        <p>Currently active bus routes</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fas fa-ticket-alt"></i> Total Bookings</h3>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent);" id="totalBookings">0</div>
+                        <p>All-time bookings made</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fas fa-dollar-sign"></i> Revenue</h3>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--success);" id="totalRevenue">$0</div>
+                        <p>Total revenue from bookings</p>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-chart-line"></i> Recent Activity</h2>
+                    <button onclick="loadAnalytics()" class="btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh Analytics
+                    </button>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activityTableBody">
+                                <tr>
+                                    <td><i class="fas fa-info-circle"></i> System</td>
+                                    <td>Welcome to CloudBus Pro Management System</td>
+                                    <td>Just now</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -817,137 +719,14 @@
                 <div class="spinner"></div>
                 <p>Processing your request...</p>
             </div>
-
-            <div class="card">
-                <div class="search-form">
-                    <h3><i class="fas fa-search"></i> Find Your Route</h3>
-                    <div class="search-grid">
-                        <div class="form-group">
-                            <label for="fromCity">From City</label>
-                            <select id="fromCity">
-                                <option value="">Select departure city</option>
-                                <option value="New York">New York</option>
-                                <option value="Boston">Boston</option>
-                                <option value="Washington DC">Washington DC</option>
-                                <option value="Chicago">Chicago</option>
-                                <option value="Detroit">Detroit</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="toCity">To City</label>
-                            <select id="toCity">
-                                <option value="">Select destination city</option>
-                                <option value="New York">New York</option>
-                                <option value="Boston">Boston</option>
-                                <option value="Washington DC">Washington DC</option>
-                                <option value="Chicago">Chicago</option>
-                                <option value="Detroit">Detroit</option>
-                            </select>
-                        </div>
-                        <button class="btn" onclick="searchRoutes()">
-                            <i class="fas fa-search"></i> Search Routes
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Available Routes -->
-            <div class="routes-grid" id="routesGrid"></div>
-
-            <!-- Booking Form -->
-            <div class="card booking-form" id="bookingForm">
-                <h3><i class="fas fa-user"></i> Passenger Details</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="passengerName">Full Name</label>
-                        <input type="text" id="passengerName" placeholder="Enter passenger name">
-                    </div>
-                    <div class="form-group">
-                        <label for="passengerAge">Age</label>
-                        <input type="number" id="passengerAge" placeholder="Enter age" min="1" max="100">
-                    </div>
-                    <div class="form-group">
-                        <label for="passengerGender">Gender</label>
-                        <select id="passengerGender">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="btn btn-secondary" onclick="confirmBooking()">
-                    <i class="fas fa-check-circle"></i> Confirm Booking
-                </button>
-            </div>
-
-            <!-- Generated Ticket -->
-            <div class="card ticket" id="ticket">
-                <div class="ticket-content">
-                    <div class="ticket-header">
-                        <h2><i class="fas fa-ticket-alt"></i> E-TICKET</h2>
-                        <p class="text-success">Booking Confirmed!</p>
-                    </div>
-                    <div class="ticket-details" id="ticketDetails"></div>
-                    <div class="button-group mt-2">
-                        <button class="btn" onclick="printTicket()">
-                            <i class="fas fa-print"></i> Print Ticket
-                        </button>
-                        <button class="btn btn-outline" onclick="newBooking()">
-                            <i class="fas fa-plus"></i> New Booking
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
-        // Supabase Configuration - UPDATE THESE WITH YOUR CREDENTIALS
-        const supabaseUrl = 'https://ocenrkcdjhovdspgcs.supabase.co'; // Your Supabase URL
-        const supabaseKey = 'your-anon-public-key-here'; // Your anon public key
+        // Supabase Configuration
+        const supabaseUrl = 'https://ndrqjatezeykgchxrtmg.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kcnFqYXRlemV5a2djaHhydG1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxNTY3NjIsImV4cCI6MjA3OTczMjc2Mn0.4P_dA4u3b8k00Vc_gZoDIgRKu977Z3D2UmvDQRVcEvA';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-        let currentUser = null;
-        let selectedRoute = null;
-
-        // Demo Users Database (for testing without Supabase)
-        const demoUsers = [
-            {
-                id: 'demo-user-001',
-                email: 'demo@cloudbus.com',
-                password: 'demopass123',
-                full_name: 'Demo User',
-                phone: '+1-555-0101'
-            },
-            {
-                id: 'admin-user-001',
-                email: 'admin@cloudbus.com',
-                password: 'admin123',
-                full_name: 'Admin User',
-                phone: '+1-555-0102'
-            },
-            {
-                id: 'test-user-001',
-                email: 'test@user.com',
-                password: 'testpass123',
-                full_name: 'Test User',
-                phone: '+1-555-0103'
-            }
-        ];
-
-        // Page Navigation
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
 
         // Utility Functions
         function showMessage(type, message) {
@@ -961,309 +740,528 @@
             document.getElementById('loading').style.display = show ? 'block' : 'none';
         }
 
-        // Quick Login Function
-        function quickLogin(email, password) {
-            document.getElementById('loginEmail').value = email;
-            document.getElementById('loginPassword').value = password;
-            login();
+        function toggleSection(sectionId, show) {
+            document.getElementById(sectionId).classList.toggle('hidden', !show);
         }
 
-        // Authentication Functions
-        async function register() {
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const phone = document.getElementById('regPhone').value;
-            const password = document.getElementById('regPassword').value;
+        // Tab Navigation
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
 
-            if (!name || !email || !password) {
+            // Load data when switching to specific tabs
+            if (tabId === 'usersTab') {
+                loadUsers();
+            } else if (tabId === 'routesTab') {
+                loadBusRoutes();
+            } else if (tabId === 'bookingsTab') {
+                loadBookings();
+                loadUsersForBooking();
+                loadRoutesForBooking();
+            } else if (tabId === 'analyticsTab') {
+                loadAnalytics();
+            }
+        }
+
+        // ==================== USERS MANAGEMENT ====================
+        async function addUser() {
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+            const fullName = document.getElementById('userFullName').value;
+            const phone = document.getElementById('userPhone').value;
+
+            if (!email || !password || !fullName) {
                 showMessage('error', 'Please fill all required fields');
                 return;
             }
 
             showLoading(true);
             try {
-                // Try to register with Supabase first
                 const { data, error } = await supabase
                     .from('users')
-                    .insert([{ 
-                        email: email, 
+                    .insert([{
+                        email: email,
                         password: password,
-                        full_name: name, 
-                        phone: phone 
+                        full_name: fullName,
+                        phone: phone
                     }])
                     .select();
 
-                if (error) {
-                    // If Supabase fails, use demo system
-                    const existingUser = demoUsers.find(user => user.email === email);
-                    if (existingUser) {
-                        throw new Error('User already exists with this email');
-                    }
-                    
-                    // Create new demo user
-                    const newUser = {
-                        id: 'user-' + Date.now(),
-                        email: email,
-                        password: password,
-                        full_name: name,
-                        phone: phone
-                    };
-                    demoUsers.push(newUser);
-                    
-                    showMessage('success', '🎉 Registration successful! Using demo mode.');
-                    currentUser = newUser;
-                } else {
-                    showMessage('success', '🎉 Registration successful!');
-                    currentUser = data[0];
-                }
-                
-                // Clear form and redirect to dashboard
-                document.getElementById('regName').value = '';
-                document.getElementById('regEmail').value = '';
-                document.getElementById('regPhone').value = '';
-                document.getElementById('regPassword').value = '';
-                
-                document.getElementById('userName').textContent = currentUser.full_name;
-                showPage('dashboard-page');
-                
+                if (error) throw error;
+
+                showMessage('success', 'User added successfully!');
+                clearUserForm();
+                loadUsers();
             } catch (error) {
-                showMessage('error', '❌ Registration failed: ' + error.message);
+                showMessage('error', 'Error adding user: ' + error.message);
             } finally {
                 showLoading(false);
             }
         }
 
-        async function login() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+        async function loadUsers() {
+            showLoading(true);
+            try {
+                const { data: users, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-            if (!email || !password) {
-                showMessage('error', 'Please enter email and password');
+                if (error) throw error;
+
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = '';
+
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id.slice(0, 8)}</td>
+                        <td>${user.email}</td>
+                        <td>${user.full_name}</td>
+                        <td>${user.phone || '-'}</td>
+                        <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button onclick="deleteUser('${user.id}')" class="btn-danger" style="padding: 6px 12px; font-size: 0.875rem;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                showMessage('error', 'Error loading users: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+
+            showLoading(true);
+            try {
+                const { error } = await supabase
+                    .from('users')
+                    .delete()
+                    .eq('id', userId);
+
+                if (error) throw error;
+
+                showMessage('success', 'User deleted successfully!');
+                loadUsers();
+            } catch (error) {
+                showMessage('error', 'Error deleting user: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function clearUserForm() {
+            document.getElementById('userEmail').value = '';
+            document.getElementById('userPassword').value = '';
+            document.getElementById('userFullName').value = '';
+            document.getElementById('userPhone').value = '';
+        }
+
+        // ==================== BUS ROUTES MANAGEMENT ====================
+        async function addBusRoute() {
+            const routeName = document.getElementById('routeName').value;
+            const fromCity = document.getElementById('fromCity').value;
+            const toCity = document.getElementById('toCity').value;
+            const departureTime = document.getElementById('departureTime').value;
+            const arrivalTime = document.getElementById('arrivalTime').value;
+            const price = parseFloat(document.getElementById('routePrice').value);
+            const seatsAvailable = parseInt(document.getElementById('seatsAvailable').value);
+            const isActive = document.getElementById('isActive').value === 'true';
+
+            if (!routeName || !fromCity || !toCity || !departureTime || !arrivalTime || !price) {
+                showMessage('error', 'Please fill all required fields');
                 return;
             }
 
             showLoading(true);
             try {
-                // Try Supabase login first
                 const { data, error } = await supabase
-                    .from('users')
-                    .select()
-                    .eq('email', email)
-                    .eq('password', password)
-                    .single();
+                    .from('bus_routes')
+                    .insert([{
+                        route_name: routeName,
+                        from_city: fromCity,
+                        to_city: toCity,
+                        departure_time: departureTime,
+                        arrival_time: arrivalTime,
+                        price: price,
+                        seats_available: seatsAvailable,
+                        is_active: isActive
+                    }])
+                    .select();
 
-                if (error) {
-                    // If Supabase fails, check demo users
-                    const user = demoUsers.find(u => u.email === email && u.password === password);
-                    if (user) {
-                        currentUser = user;
-                        showMessage('success', '✅ Welcome back, ' + user.full_name + '! (Demo Mode)');
-                    } else {
-                        throw new Error('Invalid email or password');
-                    }
-                } else {
-                    currentUser = data;
-                    showMessage('success', '✅ Welcome back, ' + data.full_name + '!');
-                }
-                
-                document.getElementById('userName').textContent = currentUser.full_name;
-                showPage('dashboard-page');
-                
+                if (error) throw error;
+
+                showMessage('success', 'Bus route added successfully!');
+                clearRouteForm();
+                loadBusRoutes();
             } catch (error) {
-                showMessage('error', '❌ Login failed: ' + error.message);
+                showMessage('error', 'Error adding bus route: ' + error.message);
             } finally {
                 showLoading(false);
             }
         }
 
-        function logout() {
-            currentUser = null;
-            showPage('home-page');
-            showMessage('info', 'You have been logged out successfully.');
-        }
-
-        // Route and Booking Functions
-        async function searchRoutes() {
-            const fromCity = document.getElementById('fromCity').value;
-            const toCity = document.getElementById('toCity').value;
-
-            if (!fromCity || !toCity) {
-                showMessage('error', 'Please select both departure and destination cities');
-                return;
-            }
-
+        async function loadBusRoutes() {
             showLoading(true);
             try {
                 const { data: routes, error } = await supabase
                     .from('bus_routes')
                     .select('*')
-                    .eq('from_city', fromCity)
-                    .eq('to_city', toCity)
-                    .eq('is_active', true);
+                    .order('created_at', { ascending: false });
 
                 if (error) throw error;
-                
-                displayRoutes(routes);
+
+                const tbody = document.getElementById('routesTableBody');
+                tbody.innerHTML = '';
+
+                routes.forEach(route => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${route.route_name}</td>
+                        <td>${route.from_city} → ${route.to_city}</td>
+                        <td>${route.departure_time} - ${route.arrival_time}</td>
+                        <td>$${route.price}</td>
+                        <td>${route.seats_available}</td>
+                        <td>
+                            <span class="status-badge ${route.is_active ? 'status-active' : 'status-inactive'}">
+                                ${route.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td>
+                            <button onclick="toggleRouteStatus('${route.id}', ${!route.is_active})" class="btn-secondary" style="padding: 6px 12px; font-size: 0.875rem;">
+                                <i class="fas fa-sync"></i> ${route.is_active ? 'Deactivate' : 'Activate'}
+                            </button>
+                            <button onclick="deleteRoute('${route.id}')" class="btn-danger" style="padding: 6px 12px; font-size: 0.875rem; margin-left: 5px;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
             } catch (error) {
-                showMessage('error', 'Failed to fetch routes: ' + error.message);
+                showMessage('error', 'Error loading bus routes: ' + error.message);
             } finally {
                 showLoading(false);
             }
         }
 
-        function displayRoutes(routes) {
-            const routesGrid = document.getElementById('routesGrid');
-            
-            if (!routes || routes.length === 0) {
-                routesGrid.innerHTML = '<div class="message warning">No routes found for the selected cities</div>';
-                return;
+        async function toggleRouteStatus(routeId, newStatus) {
+            showLoading(true);
+            try {
+                const { error } = await supabase
+                    .from('bus_routes')
+                    .update({ is_active: newStatus })
+                    .eq('id', routeId);
+
+                if (error) throw error;
+
+                showMessage('success', `Route ${newStatus ? 'activated' : 'deactivated'} successfully!`);
+                loadBusRoutes();
+            } catch (error) {
+                showMessage('error', 'Error updating route: ' + error.message);
+            } finally {
+                showLoading(false);
             }
-
-            routesGrid.innerHTML = routes.map(route => `
-                <div class="route-card" onclick="selectRoute('${route.id}')" id="route-${route.id}">
-                    <div class="route-info">
-                        <div class="route-header">
-                            <span class="route-name">${route.route_name}</span>
-                            <span class="route-price">$${route.price}</span>
-                        </div>
-                        <div class="route-details">
-                            <div class="detail-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>${route.from_city} → ${route.to_city}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-clock"></i>
-                                <span>${route.departure_time} - ${route.arrival_time}</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-chair"></i>
-                                <span>${route.seats_available} seats available</span>
-                            </div>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            `).join('');
         }
 
-        function selectRoute(routeId) {
-            // Remove previous selection
-            document.querySelectorAll('.route-card').forEach(card => {
-                card.classList.remove('selected');
-            });
+        async function deleteRoute(routeId) {
+            if (!confirm('Are you sure you want to delete this route?')) return;
 
-            // Add selection to clicked card
-            const selectedCard = document.getElementById(`route-${routeId}`);
-            selectedCard.classList.add('selected');
-            selectedRoute = routeId;
+            showLoading(true);
+            try {
+                const { error } = await supabase
+                    .from('bus_routes')
+                    .delete()
+                    .eq('id', routeId);
 
-            // Show booking form
-            document.getElementById('bookingForm').style.display = 'block';
-            showMessage('info', 'Route selected! Please fill passenger details.');
+                if (error) throw error;
+
+                showMessage('success', 'Route deleted successfully!');
+                loadBusRoutes();
+            } catch (error) {
+                showMessage('error', 'Error deleting route: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
         }
 
-        async function confirmBooking() {
+        function clearRouteForm() {
+            document.getElementById('routeName').value = '';
+            document.getElementById('fromCity').value = '';
+            document.getElementById('toCity').value = '';
+            document.getElementById('departureTime').value = '';
+            document.getElementById('arrivalTime').value = '';
+            document.getElementById('routePrice').value = '';
+            document.getElementById('seatsAvailable').value = '40';
+            document.getElementById('isActive').value = 'true';
+        }
+
+        // ==================== BOOKINGS MANAGEMENT ====================
+        async function loadUsersForBooking() {
+            try {
+                const { data: users, error } = await supabase
+                    .from('users')
+                    .select('id, email, full_name')
+                    .order('full_name');
+
+                if (error) throw error;
+
+                const select = document.getElementById('bookingUserId');
+                select.innerHTML = '<option value="">Select user</option>';
+                
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = `${user.full_name} (${user.email})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading users for booking:', error);
+            }
+        }
+
+        async function loadRoutesForBooking() {
+            try {
+                const { data: routes, error } = await supabase
+                    .from('bus_routes')
+                    .select('id, route_name, from_city, to_city, price')
+                    .eq('is_active', true)
+                    .order('route_name');
+
+                if (error) throw error;
+
+                const select = document.getElementById('bookingRouteId');
+                select.innerHTML = '<option value="">Select route</option>';
+                
+                routes.forEach(route => {
+                    const option = document.createElement('option');
+                    option.value = route.id;
+                    option.textContent = `${route.route_name} (${route.from_city} → ${route.to_city}) - $${route.price}`;
+                    option.setAttribute('data-price', route.price);
+                    select.appendChild(option);
+                });
+
+                // Auto-update price when route is selected
+                select.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.value) {
+                        document.getElementById('totalPrice').value = selectedOption.getAttribute('data-price');
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading routes for booking:', error);
+            }
+        }
+
+        async function createBooking() {
+            const userId = document.getElementById('bookingUserId').value;
+            const routeId = document.getElementById('bookingRouteId').value;
             const passengerName = document.getElementById('passengerName').value;
-            const passengerAge = document.getElementById('passengerAge').value;
+            const passengerAge = parseInt(document.getElementById('passengerAge').value);
             const passengerGender = document.getElementById('passengerGender').value;
+            const seatNumber = document.getElementById('seatNumber').value;
+            const totalPrice = parseFloat(document.getElementById('totalPrice').value);
+            const status = document.getElementById('bookingStatus').value;
 
-            if (!passengerName || !passengerAge || !selectedRoute) {
-                showMessage('error', 'Please fill all passenger details and select a route');
+            if (!userId || !routeId || !passengerName || !passengerAge || !totalPrice) {
+                showMessage('error', 'Please fill all required fields');
                 return;
             }
 
             showLoading(true);
             try {
-                // Get route details
-                const { data: routeData, error: routeError } = await supabase
-                    .from('bus_routes')
-                    .select('*')
-                    .eq('id', selectedRoute)
-                    .single();
-
-                if (routeError) throw routeError;
-
-                // Create booking
-                const { data: bookingData, error: bookingError } = await supabase
+                const { data, error } = await supabase
                     .from('bookings')
                     .insert([{
-                        user_id: currentUser.id,
-                        route_id: selectedRoute,
+                        user_id: userId,
+                        route_id: routeId,
                         passenger_name: passengerName,
-                        passenger_age: parseInt(passengerAge),
+                        passenger_age: passengerAge,
                         passenger_gender: passengerGender,
-                        total_price: routeData.price,
-                        status: 'confirmed'
+                        seat_number: seatNumber || null,
+                        total_price: totalPrice,
+                        status: status
                     }])
                     .select();
 
-                if (bookingError) throw bookingError;
+                if (error) throw error;
 
-                // Update seat count
-                await supabase.rpc('decrease_seat_count', { route_id: selectedRoute });
-
-                showMessage('success', '✅ Booking confirmed successfully!');
-                displayTicket(bookingData[0], routeData);
-                document.getElementById('bookingForm').style.display = 'none';
-                
+                showMessage('success', 'Booking created successfully!');
+                clearBookingForm();
+                loadBookings();
             } catch (error) {
-                showMessage('error', '❌ Booking failed: ' + error.message);
+                showMessage('error', 'Error creating booking: ' + error.message);
             } finally {
                 showLoading(false);
             }
         }
 
-        function displayTicket(booking, route) {
-            const ticketDiv = document.getElementById('ticket');
-            const ticketDetails = document.getElementById('ticketDetails');
-            
-            ticketDetails.innerHTML = `
-                <div>
-                    <div class="ticket-item"><strong>Ticket ID:</strong> ${booking.id.slice(0, 8)}</div>
-                    <div class="ticket-item"><strong>Passenger:</strong> ${booking.passenger_name}</div>
-                    <div class="ticket-item"><strong>Age:</strong> ${booking.passenger_age}</div>
-                    <div class="ticket-item"><strong>Gender:</strong> ${booking.passenger_gender}</div>
-                </div>
-                <div>
-                    <div class="ticket-item"><strong>Route:</strong> ${route.route_name}</div>
-                    <div class="ticket-item"><strong>From:</strong> ${route.from_city}</div>
-                    <div class="ticket-item"><strong>To:</strong> ${route.to_city}</div>
-                    <div class="ticket-item"><strong>Departure:</strong> ${route.departure_time}</div>
-                    <div class="ticket-item"><strong>Price:</strong> $${booking.total_price}</div>
-                    <div class="ticket-item"><strong>Booking Date:</strong> ${new Date(booking.booking_date).toLocaleString()}</div>
-                </div>
-            `;
-            
-            ticketDiv.style.display = 'block';
+        async function loadBookings() {
+            showLoading(true);
+            try {
+                const { data: bookings, error } = await supabase
+                    .from('bookings')
+                    .select(`
+                        *,
+                        users (email, full_name),
+                        bus_routes (route_name, from_city, to_city)
+                    `)
+                    .order('booking_date', { ascending: false });
+
+                if (error) throw error;
+
+                const tbody = document.getElementById('bookingsTableBody');
+                tbody.innerHTML = '';
+
+                bookings.forEach(booking => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${booking.id.slice(0, 8)}</td>
+                        <td>
+                            <div><strong>${booking.passenger_name}</strong></div>
+                            <small style="color: var(--gray);">${booking.users?.email}</small>
+                        </td>
+                        <td>
+                            <div><strong>${booking.bus_routes?.route_name}</strong></div>
+                            <small style="color: var(--gray);">${booking.bus_routes?.from_city} → ${booking.bus_routes?.to_city}</small>
+                        </td>
+                        <td>${booking.passenger_age} / ${booking.passenger_gender}</td>
+                        <td>${booking.seat_number || '-'}</td>
+                        <td>$${booking.total_price}</td>
+                        <td>
+                            <span class="status-badge status-${booking.status}">
+                                ${booking.status}
+                            </span>
+                        </td>
+                        <td>${new Date(booking.booking_date).toLocaleDateString()}</td>
+                        <td>
+                            <button onclick="updateBookingStatus('${booking.id}', 'confirmed')" class="btn-secondary" style="padding: 6px 12px; font-size: 0.875rem;">
+                                <i class="fas fa-check"></i> Confirm
+                            </button>
+                            <button onclick="deleteBooking('${booking.id}')" class="btn-danger" style="padding: 6px 12px; font-size: 0.875rem; margin-left: 5px;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                showMessage('error', 'Error loading bookings: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
         }
 
-        function printTicket() {
-            window.print();
+        async function updateBookingStatus(bookingId, newStatus) {
+            showLoading(true);
+            try {
+                const { error } = await supabase
+                    .from('bookings')
+                    .update({ status: newStatus })
+                    .eq('id', bookingId);
+
+                if (error) throw error;
+
+                showMessage('success', 'Booking status updated successfully!');
+                loadBookings();
+            } catch (error) {
+                showMessage('error', 'Error updating booking: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
         }
 
-        function newBooking() {
-            document.getElementById('ticket').style.display = 'none';
-            document.getElementById('bookingForm').style.display = 'none';
-            document.querySelectorAll('.route-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            selectedRoute = null;
-            
-            // Clear form fields
+        async function deleteBooking(bookingId) {
+            if (!confirm('Are you sure you want to delete this booking?')) return;
+
+            showLoading(true);
+            try {
+                const { error } = await supabase
+                    .from('bookings')
+                    .delete()
+                    .eq('id', bookingId);
+
+                if (error) throw error;
+
+                showMessage('success', 'Booking deleted successfully!');
+                loadBookings();
+            } catch (error) {
+                showMessage('error', 'Error deleting booking: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function clearBookingForm() {
+            document.getElementById('bookingUserId').value = '';
+            document.getElementById('bookingRouteId').value = '';
             document.getElementById('passengerName').value = '';
             document.getElementById('passengerAge').value = '';
             document.getElementById('passengerGender').value = 'Male';
-            
-            showMessage('info', 'Ready for new booking!');
+            document.getElementById('seatNumber').value = '';
+            document.getElementById('totalPrice').value = '';
+            document.getElementById('bookingStatus').value = 'confirmed';
         }
 
-        // Initialize the app
+        // ==================== ANALYTICS ====================
+        async function loadAnalytics() {
+            showLoading(true);
+            try {
+                // Load total users
+                const { count: userCount, error: userError } = await supabase
+                    .from('users')
+                    .select('*', { count: 'exact', head: true });
+
+                if (userError) throw userError;
+
+                // Load active routes
+                const { count: routeCount, error: routeError } = await supabase
+                    .from('bus_routes')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('is_active', true);
+
+                if (routeError) throw routeError;
+
+                // Load total bookings and revenue
+                const { data: bookings, error: bookingError } = await supabase
+                    .from('bookings')
+                    .select('total_price');
+
+                if (bookingError) throw bookingError;
+
+                const totalBookings = bookings.length;
+                const totalRevenue = bookings.reduce((sum, booking) => sum + booking.total_price, 0);
+
+                // Update UI
+                document.getElementById('totalUsers').textContent = userCount || 0;
+                document.getElementById('activeRoutes').textContent = routeCount || 0;
+                document.getElementById('totalBookings').textContent = totalBookings;
+                document.getElementById('totalRevenue').textContent = `$${totalRevenue.toFixed(2)}`;
+
+            } catch (error) {
+                showMessage('error', 'Error loading analytics: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Initialize the application
         window.addEventListener('load', () => {
-            showMessage('info', '🚀 Welcome to CloudBus Pro! Use demo credentials for quick testing.');
-            
-            // Auto-fill demo credentials for easy testing
-            document.getElementById('loginEmail').value = 'demo@cloudbus.com';
-            document.getElementById('loginPassword').value = 'demopass123';
+            showMessage('info', 'Welcome to CloudBus Pro Management System!');
+            loadUsers(); // Load initial data
         });
     </script>
 </body>
